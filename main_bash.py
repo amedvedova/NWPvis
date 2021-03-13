@@ -33,6 +33,7 @@
 
 import os
 import sys
+import pandas as pd
 
 # import: local dependencies
 from load_cut_nc_files import get_input_data
@@ -66,6 +67,9 @@ ds = get_input_data(filename_model_level=ML_DATA,
 # Calculate geopotential and pressure: do this BEFORE choosing slices!
 ds = get_geopotential(os.getcwd(), ds)
 
+# add "initial time" attribute to calculate time differences later
+ds.attrs['init_time'] = pd.to_datetime(ds.time[0].values)
+
 
 # %% Choose data slices: add all variables to them
 
@@ -90,37 +94,21 @@ if plot_topo:
 
 # %% Trial cross-section plotting: EXAMPLE CASES
 # uncomment whatever line(s) to get different examples
+# with the limited example files, select time between 0 and 5
 
-# # nice example for an example of water clouds
-# data_out = ds_lon.sel(longitude=12.4, method='nearest').isel(time=38)
-
-# # nice example for winds/isentropes
-# data_out = ds_lon.sel(longitude=12.4, method='nearest').isel(time=26)
-
-# # max ciwc of the dataset in this slice
-# data_out = ds_lon.sel(longitude=5.5, method='nearest').isel(time=38)
-
-# # max crwc, cswc of the dataset in this slice, also ok for ice clouds
-# data_out = ds_lon.sel(longitude=6.6, method='nearest').isel(time=39)
-
-# nice for wind
-# data_out = ds_lon.sel(longitude=5.5, method='nearest').isel(time=36)
-# data_out = ds_lat.sel(latitude=47.3, method='nearest').isel(time=36)
-
-# also nice for water clouds
+# EXAMPLES: LAT / LON CROSS-SECTIONS
 data_out = ds_lat.sel(latitude=47.3, method='nearest').isel(time=2)
+# data_out = ds_lon.sel(longitude=11.4, method='nearest').isel(time=4)
 
-# # diagonal cross-section
-# data_out = ds_diag_1.isel(time=26)
-
+# EXAMPLES: DIAGONAL CROSS-SECTIONS
 # # plotting along diagonals takes time because of interpolation:
-# # select time step BEFORE calling slice_diag
-# ds_diag = slice_diag(ds.isel(time=36), 5.5, 47.3, 17.5, 47.3)
+# # IMPORTANT: select time step BEFORE calling slice_diag
+
+# ds_diag = slice_diag(ds.isel(time=2), 5.5, 47.3, 17.5, 47.8)
 # data_out = calculate_all_vars(ds_diag)
 
-# ds_diag = slice_diag(ds.isel(time=36), 5.5, 46.0, 17.5, 55.0)
-# data_out_2 = calculate_all_vars(ds_diag)
-# Wind_plot(data_out_2).make_figure()
+# ds_diag = slice_diag(ds.isel(time=2), 5.5, 46.0, 17.5, 55.0)
+# data_out = calculate_all_vars(ds_diag)
 
 
 fig_t, ax_t = Temperature_plot(data_out).make_figure()
