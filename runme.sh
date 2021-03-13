@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script runs the "main.py" python script, which produces the vertical cross-section figures.
+# This script runs the "main_bash.py" python script, which produces the vertical cross-section figures.
 # The python code takes 4 command line arguments: 3 for input data, 1 as path to output figures.
 
 
